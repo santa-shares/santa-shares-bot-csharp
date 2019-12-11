@@ -15,6 +15,7 @@ namespace santa_shares
         {
             var dataAsString = JsonConvert.SerializeObject(data);
             var content = new StringContent(dataAsString);
+            Console.WriteLine(dataAsString);
             if (!(auth is null)) httpClient.DefaultRequestHeaders.Authorization = auth;
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             return httpClient.PostAsync(url, content);
