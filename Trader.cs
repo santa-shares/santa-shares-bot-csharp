@@ -55,6 +55,8 @@ namespace santa_shares
         private async Task<bool> Buy(Item item, int qty)
         {
             Item itemRequest = new Item(){
+                item_name = item.item_name,
+                price = item.price,
                 item_id = item.item_id,
                 amount = qty
             };
