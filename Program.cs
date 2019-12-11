@@ -15,6 +15,9 @@ namespace santa_shares
         public static async Task Main(string[] args)
         {
             User user = await Init();
+            Trader trader = new Trader(user);
+            await trader.Run();
+            Console.ReadLine();
         }
 
         private static async Task<User> Init()
@@ -43,6 +46,7 @@ namespace santa_shares
                     string v = Console.ReadLine();
                     if (v.ToLowerInvariant().Contains("y"))
                     {
+                        if (!Directory.Exists(Environment.ExpandEnvironmentVariables("%APPDATA%/santa/"))) Directory.CreateDirectory(Environment.ExpandEnvironmentVariables("%APPDATA%/santa/"));
                         user = await CreateUser(username);
                         users.AllUsers = users.AllUsers.Append(user).ToArray();
                         await File.WriteAllTextAsync(LocalFile, JsonSerializer.Serialize(users, typeof(Users)));
@@ -64,6 +68,7 @@ namespace santa_shares
                 string v = Console.ReadLine();
                 if (v.ToLowerInvariant().Contains("y"))
                 {
+                    if (!Directory.Exists(Environment.ExpandEnvironmentVariables("%APPDATA%/santa/"))) Directory.CreateDirectory(Environment.ExpandEnvironmentVariables("%APPDATA%/santa/"));
                     user = await CreateUser(username);
                     await File.WriteAllTextAsync(LocalFile, JsonSerializer.Serialize(new Users() { AllUsers = new[] { user } }, typeof(Users)));
                     return user;
@@ -85,10 +90,11 @@ namespace santa_shares
             HttpClient client = new HttpClient();
             HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync(APIUrl + "users", user);
             string response = await httpResponseMessage.Content.ReadAsStringAsync();
+            Console.WriteLine(response);
             user = await httpResponseMessage.Content.ReadAsJsonAsync<User>();
             return user;
         }
 
-        
+
     }
 }

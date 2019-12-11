@@ -24,8 +24,6 @@ namespace santa_shares
            this HttpClient httpClient, string url, AuthenticationHeaderValue auth = null)
         {
             if (!(auth is null)) httpClient.DefaultRequestHeaders.Authorization = auth;
-            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-            httpClient.DefaultRequestHeaders.Add("Content-Type", "application/json");
             return httpClient.GetAsync(url);
         }
 
@@ -33,8 +31,6 @@ namespace santa_shares
            this HttpClient httpClient, string url, AuthenticationHeaderValue auth = null)
         {
             if (!(auth is null)) httpClient.DefaultRequestHeaders.Authorization = auth;
-            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-            httpClient.DefaultRequestHeaders.Add("Content-Type", "application/json");
             HttpResponseMessage httpResponseMessage = await httpClient.GetAsync(url);
             T response = await httpResponseMessage.Content.ReadAsJsonAsync<T>();
             return response;
@@ -43,6 +39,7 @@ namespace santa_shares
         public static async Task<T> ReadAsJsonAsync<T>(this HttpContent content)
         {
             var dataAsString = await content.ReadAsStringAsync();
+            Console.WriteLine(dataAsString);
             return JsonConvert.DeserializeObject<T>(dataAsString);
         }
     }
