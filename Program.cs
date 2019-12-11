@@ -11,13 +11,13 @@ namespace santa_shares
     class Program
     {
         private static readonly string LocalFile = Environment.ExpandEnvironmentVariables("%APPDATA%/santa/user.txt");
-        private static readonly string url = @"http://santa-shares.azurewebsites.net/api/";
+        public static readonly string APIUrl = @"http://santa-shares.azurewebsites.net/api/";
         public static async Task Main(string[] args)
         {
-            await Init();
+            User user = await Init();
         }
 
-        private static async Task Init()
+        private static async Task<User> Init()
         {
             Console.WriteLine("Type username");
             string username = Console.ReadLine();
@@ -26,8 +26,8 @@ namespace santa_shares
             {
                 user = await findOrGenerateUser(username);
             }
-            Console.WriteLine($"Hello World! From {user.user_name}, ID{user.user_id}, Token{user.token}");
-            Console.ReadLine();
+            Console.WriteLine($"Successfully registered {user.user_name}, ID {user.user_id}, Token{user.token}");
+            return user;
         }
 
         private static async Task<User> findOrGenerateUser(string username)
@@ -83,10 +83,12 @@ namespace santa_shares
                 user_name = username
             };
             HttpClient client = new HttpClient();
-            HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync(url + "users", user);
+            HttpResponseMessage httpResponseMessage = await client.PostAsJsonAsync(APIUrl + "users", user);
             string response = await httpResponseMessage.Content.ReadAsStringAsync();
             user = await httpResponseMessage.Content.ReadAsJsonAsync<User>();
             return user;
         }
+
+        
     }
 }
