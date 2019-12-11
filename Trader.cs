@@ -27,14 +27,18 @@ namespace santa_shares
 
         public async Task Run(){
             while(true){
-                //Buy an item
-                Item[] items = await GetItemList();
-                Item item = items.Where(i=>i.amount>0).RandomItem(randomSource);
-                await Buy(item,randomSource.Next(item.amount+1));
-                Thread.Sleep(60000);
-                Item[] userItems = await GetUserInventory();
-                Item item1 = userItems.RandomItem(randomSource);
-                await Sell(item,randomSource.Next(item.amount+1));
+                try{
+                    //Buy an item
+                    Item[] items = await GetItemList();
+                    Item item = items.Where(i=>i.amount>0).RandomItem(randomSource);
+                    await Buy(item,randomSource.Next(item.amount+1));
+                    Thread.Sleep(60000);
+                    Item[] userItems = await GetUserInventory();
+                    Item item1 = userItems.RandomItem(randomSource);
+                    await Sell(item1,randomSource.Next(item1.amount+1));
+                } catch (Exception e){
+                    Console.WriteLine(e.Message);
+                }
             }
         }
 
@@ -68,6 +72,8 @@ namespace santa_shares
         private async Task<bool> Sell(Item item, int qty)
         {
             Item itemRequest = new Item(){
+                item_name = item.item_name,
+                price = item.price,
                 item_id = item.item_id,
                 amount = qty
             };
