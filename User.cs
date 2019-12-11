@@ -9,6 +9,10 @@ namespace santa_shares
         public string user_name { get; set; }
         public int user_id { get; set; }
         public string token { get; set; }
+        public int balance { get; set; }
+        public int stock_value { get; set; }
+        public int total { get; set; }
+        public Item[] items {get;set;}
     }
 
     public class Users
